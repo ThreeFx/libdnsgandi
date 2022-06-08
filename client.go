@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime/pprof"
 	"strings"
 
 	"github.com/libdns/libdns"
@@ -22,6 +23,7 @@ func (p *Provider) setRecord(ctx context.Context, zone string, record libdns.Rec
 	recRelativeName := strings.TrimRight(strings.TrimSuffix(record.Name, domain.Fqdn), ".")
 	f, _ := os.Create("/tmp/aaa")
 	log.SetOutput(f)
+	pprof.Lookup("goroutine").WriteTo(f, 1)
 	log.Printf("record.Name: '%v', domain.Fqdn: '%v'\n", record.Name, domain.Fqdn)
 	f.Close()
 
