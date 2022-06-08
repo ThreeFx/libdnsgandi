@@ -186,9 +186,9 @@ func (p *Provider) doRequest(req *http.Request, result interface{}) (gandiStatus
 
 	// if we get a 200, we parse the json object
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		f, err := os.Create("/tmp/aaa")
+		f, _ := os.Create("/tmp/aaa")
 		log.SetOutput(f)
-		log.Printf("request: %+v, result type: %T", req, result)
+		log.Printf("request: %+v, result type: %T\n\n", req, result)
 		return gandiStatus{}, err
 	}
 
