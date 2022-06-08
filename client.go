@@ -5,7 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/libdns/libdns"
@@ -184,6 +186,9 @@ func (p *Provider) doRequest(req *http.Request, result interface{}) (gandiStatus
 
 	// if we get a 200, we parse the json object
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		f, err := os.Create("/tmp/aaa")
+		log.SetOutput(f)
+		log.Printf("request: %+v, result type: %T", req, result)
 		return gandiStatus{}, err
 	}
 
