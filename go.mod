@@ -1,4 +1,4 @@
-module github.com/libdns/gandi
+module github.com/ThreeFx/libdnsgandi
 
 go 1.14
 
