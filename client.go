@@ -20,8 +20,13 @@ func (p *Provider) setRecord(ctx context.Context, zone string, record libdns.Rec
 	// there is some strange regexp in the api that prevents us from searching names ending with a dot
 	// so we must ensure the names of the record is relative and does not end with a dot
 	recRelativeName := strings.TrimRight(strings.TrimSuffix(record.Name, domain.Fqdn), ".")
+	f, _ := os.Create("/tmp/aaa")
+	log.SetOutput(f)
+	log.Printf("record.Name: '%v', domain.Fqdn: '%v'\n", record.Name, domain.Fqdn)
+	f.Close()
 
-	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/%s/%s", domain.ZoneRecordsHref, recRelativeName, record.Type), nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/%s/%s",
+		domain.ZoneRecordsHref, recRelativeName, record.Type), nil)
 	if err != nil {
 		return err
 	}
@@ -186,9 +191,6 @@ func (p *Provider) doRequest(req *http.Request, result interface{}) (gandiStatus
 
 	// if we get a 200, we parse the json object
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		f, _ := os.Create("/tmp/aaa")
-		log.SetOutput(f)
-		log.Printf("request: %+v, result type: %T\n\n", req, result)
 		return gandiStatus{}, err
 	}
 
